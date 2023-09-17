@@ -6,11 +6,11 @@ export const contactsSlice = createSlice({
   reducers: {
     add: (state, action) => {
       const { name, number } = action.payload;
-      if (state.list) {
-        if (state.list.find(contact => contact.name === name)) {
-          return state;
-        }
-      }
+      // if (state.list) {
+      //   if (state.list.find(contact => contact.name === name)) {
+      //     return state;
+      //   }
+      // }
       state.list = [...state.list, { name, number }];
       return state;
     },
