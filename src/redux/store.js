@@ -23,5 +23,3 @@ const rootReducer = (state = initialState, action) => {
 };
 
 const enhancer = devToolsEnhancer();
-
-export const store = createStore(rootReducer, enhancer);
