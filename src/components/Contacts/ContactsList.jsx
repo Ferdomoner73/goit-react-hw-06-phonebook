@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { EachContact } from './EachContact';
 import { Filter } from './Filter';
@@ -8,32 +7,27 @@ import {
   ContactsListTitle,
   List,
 } from './contacts.styled';
+import { useSelector } from 'react-redux';
 
-export const ContactsList = ({ contacts, handleChange, handleDelete }) => {
+export const ContactsList = ({ handleChange }) => {
+  const contacts = useSelector(state => state.contacts.list);
+  const filter = useSelector(state => state.filter);
+
+  const filterContactsList = contactsList => {
+    return contactsList.filter(({ name }) =>
+      name.toLowerCase().includes(filter)
+    );
+  };
+
   return (
     <ContactsListContainer>
       <ContactsListTitle>Contacts</ContactsListTitle>
       <Filter handleChange={handleChange} />
       <List>
-        {contacts.map(contact => (
-          <EachContact
-            key={nanoid(10)}
-            contact={contact}
-            handleDelete={handleDelete}
-          />
+        {filterContactsList(contacts).map(contact => (
+          <EachContact key={nanoid(10)} contact={contact} />
         ))}
       </List>
     </ContactsListContainer>
   );
-};
-
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  handleChange: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
 };

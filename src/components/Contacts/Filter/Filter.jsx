@@ -1,20 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Title, Input, FilterCOntainer } from './filter.styled';
+import { useDispatch } from 'react-redux';
+import { filter } from '../../../redux/filter/filter';
 
-export const Filter = ({ handleChange }) => {
+export const Filter = () => {
   const filterUniqueId = nanoid(10);
+  const dispatch = useDispatch();
 
   return (
     <FilterCOntainer>
       <Title>Find contacts by name</Title>
       <label htmlFor={filterUniqueId}></label>
-      <Input id={filterUniqueId} type="text" onChange={handleChange} />
+      <Input
+        id={filterUniqueId}
+        type="text"
+        onChange={e => dispatch(filter(e.target.value))}
+      />
     </FilterCOntainer>
   );
-};
-
-Filter.propTypes = {
-  handleChange: PropTypes.func.isRequired,
 };

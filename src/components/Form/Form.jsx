@@ -1,9 +1,10 @@
 import { nanoid } from 'nanoid';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import * as Yup from 'yup';
 import { FormSection, FormTitle } from './form.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { add } from '../../redux/contacts/contactsSlice';
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -18,9 +19,27 @@ const SignupSchema = Yup.object().shape({
     .required('Phone number is required'),
 });
 
-export const ContactsForm = ({ handleSubmit }) => {
+export const ContactsForm = () => {
   const nameUniqueId = nanoid(20);
   const telUniqueId = nanoid(25);
+
+  const contacts = useSelector(state => state.contacts.list);
+  const dispatch = useDispatch();
+
+  const addNewContact = e => {
+    if (Array.isArray(contacts) && contacts.length >= 1) {
+      if (
+        contacts.find(contact => {
+          return contact.name === e.name;
+        })
+      ) {
+        return alert(`${e.name} is already in contacts`);
+      }
+    }
+
+    dispatch(add(e));
+  };
+
   return (
     <FormSection>
       <FormTitle>Phonebook</FormTitle>
@@ -31,7 +50,7 @@ export const ContactsForm = ({ handleSubmit }) => {
         }}
         validationSchema={SignupSchema}
         onSubmit={(values, actions) => {
-          handleSubmit(values);
+          addNewContact(values);
           actions.resetForm();
         }}
       >
@@ -65,8 +84,4 @@ export const ContactsForm = ({ handleSubmit }) => {
       </Formik>
     </FormSection>
   );
-};
-
-ContactsForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
 };
